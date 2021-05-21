@@ -6,6 +6,31 @@ document.addEventListener('DOMContentLoaded', function(){
 
 function inciarApp(){
     mostrarServicios();
+
+    //Resalta el Div Actual segun su Tab
+
+
+
+    //Oculta o muestra una seccion segun el Tab
+    cambiarSeccion()
+}
+
+function cambiarSeccion(){
+    const enlaces = document.querySelectorAll('.tabs button');
+
+   enlaces.forEach(enlace => {
+       enlace.addEventListener('click', e => {
+           e.preventDefault();
+
+           pagina = parseInt(e.target.dataset.paso);
+
+           const seccion = document.querySelector(`#paso-${pagina}`);
+           seccion.classList.add('mostrar-seccion');
+       })
+   })
+       
+   
+    
 }
 
 async function mostrarServicios(){
@@ -34,7 +59,7 @@ async function mostrarServicios(){
                 servicioDiv.classList.add('servicio');
 
                 //Selecciona un servicio para la cita
-                servicioDiv.onclick = serleccionarServicio;
+                servicioDiv.onclick = seleccionarServicio;
                 servicioDiv.dataset.idServicio = id;
 
 
@@ -46,23 +71,25 @@ async function mostrarServicios(){
                 servicioDiv.appendChild(nombreServicio);
                 servicioDiv.appendChild(precioServicio);
 
-                console.log(servicioDiv)
+                
 
                 //Inyectar en el HTML
                 document.querySelector('#servicios').appendChild(servicioDiv);
                 
             });
+
     } catch (error) {
         console.log(error);
     }
 }
 
-function serleccionarServicio(event){
+function seleccionarServicio(e){
     let elemento; 
-    if(event.target.tagName === 'P'){
-       elemento = event.target.parentElement;
+    //Forzar que el elemento que le damos click sea un DIV
+    if(e.target.tagName === 'P'){
+       elemento = e.target.parentElement;
     }else{
-        elemento = event.target;
+        elemento = e.target;
     }
 
     if(elemento.classList.contains('seleccionado')){
@@ -71,3 +98,4 @@ function serleccionarServicio(event){
         elemento.classList.add('seleccionado');
     }
 }
+
