@@ -21,3 +21,18 @@
 
     }
 }
+
+.alerta {
+    padding: $separacion / 2;
+    text-align: center;
+    color: $blanco;
+    width: 100%;
+    display: block;
+    font-weight: $bold;
+    font-size: 2rem;
+
+    &.error {
+        background-color: rgb(194, 0, 0);
+        border-radius: 1rem;
+    }
+}

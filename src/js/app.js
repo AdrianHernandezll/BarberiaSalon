@@ -33,7 +33,11 @@ function inciarApp() {
 
     mostrarResumen();
     //Almacena el nombre de la cita 
-    nombre();
+    nombreCita();
+    //Almacena la fecha de la cita en el objeto
+    fechaCita();
+    //Desabilitar dias pasado
+    deshabilitarFechaAnterior();
 }
 
 function mostrarSeccion() {
@@ -110,11 +114,6 @@ async function mostrarServicios() {
             //Selecciona un servicio para la cita
             servicioDiv.onclick = seleccionarServicio;
             servicioDiv.dataset.idServicio = id;
-
-
-
-
-
 
             //Inyectar precio y nombre
             servicioDiv.appendChild(nombreServicio);
@@ -244,7 +243,78 @@ function mostrarResumen() {
 
 function nombreCita() {
     const nombreInput = document.querySelector('#nombre');
-    nombreInput.addEventListener('input', () => {
-        console.log('escribiendo');
+    nombreInput.addEventListener('input', e => {
+        const nombreTexto = e.target.value.trim();
+
+        //Validacion de que nombretexto debe tener algo
+        if (nombreTexto === '' || nombreTexto.length < 3) {
+            mostrarAlerta('nombre no valido', 'error');
+        } else {
+            const alerta = document.querySelector('.alerta');
+            if (alerta) {
+                alerta.remove();
+            }
+            cita.nombre = nombreTexto;
+        }
+
     })
+}
+
+function mostrarAlerta(mensaje, tipo) {
+
+    //si hay una alerta previa, entonces no crear otra
+
+    const alertaPrevia = document.querySelector('.alerta');
+    if (alertaPrevia) {
+        return;
+    }
+
+    const alerta = document.createElement('DIV');
+    alerta.textContent = mensaje;
+    alerta.classList.add('alerta');
+
+    if (tipo === 'error') {
+        alerta.classList.add('error');
+    }
+
+    //Insertar en el HTML
+
+    const formulario = document.querySelector('.formulario');
+    formulario.appendChild(alerta);
+
+    //Eliminar la alerta despues de 3 seg
+    setTimeout(() => {
+        alerta.remove();
+    }, 3000);
+}
+
+function fechaCita() {
+    const fechaInput = document.querySelector('#fecha');
+    fechaInput.addEventListener('input', e => {
+        // console.log(e.target.value);
+
+        const dia = new Date(e.target.value).getUTCDay();
+        if ([0].includes(dia)) {
+            e.preventDefault();
+            fechaInput.value = '';
+            mostrarAlerta('Fin de Semana no valido', 'error');
+        } else {
+            cita.fecha = fechaInput.value;
+        }
+    })
+}
+
+function deshabilitarFechaAnterior() {
+    const inputFecha = document.querySelector('#fecha');
+
+    const fechaAhora = new Date();
+    const year = fechaAhora.getFullYear();
+    const mes = fechaAhora.getMonth() + 1;
+    const dia = fechaAhora.getDate() + 1;
+
+    //Formato deseado AAAA-MM-DD
+
+    const fechaDeshabilitar = `${year}-${mes}-${dia}`;
+    inputFecha = fechaDeshabilitar;
+
 }
