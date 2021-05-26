@@ -32,6 +32,8 @@ function inciarApp() {
     //Muestra el resumen de la cita (o mensaje en caso de que no pase la verificacion)
 
     mostrarResumen();
+    //Almacena el nombre de la cita 
+    nombre();
 }
 
 function mostrarSeccion() {
@@ -141,9 +143,42 @@ function seleccionarServicio(e) {
 
     if (elemento.classList.contains('seleccionado')) {
         elemento.classList.remove('seleccionado');
+
+        const id = parseInt(elemento.dataset.idServicio);
+
+        eliminarServicio(id);
     } else {
         elemento.classList.add('seleccionado');
+
+        const servicioObj = {
+            id: parseInt(elemento.dataset.idServicio),
+            nombre: elemento.firstElementChild.textContent,
+            precio: elemento.firstElementChild.nextElementSibling.textContent,
+        }
+        // console.log(servicioObj);
+
+
+        agregarServicio(servicioObj);
     }
+}
+
+function eliminarServicio(id) {
+    const {
+        servicios
+    } = cita;
+    cita.servicios = servicios.filter(servicio => servicio.id !== id);
+
+    console.log(cita);
+}
+
+function agregarServicio(servicioObj) {
+    const {
+        servicios
+    } = cita;
+
+    cita.servicios = [...servicios, servicioObj];
+
+    // console.log(cita);
 }
 
 function paginaSiguiente() {
@@ -205,4 +240,11 @@ function mostrarResumen() {
         //Agregar a resumen Div
         resumenDiv.appendChild(noServicios);
     }
+}
+
+function nombreCita() {
+    const nombreInput = document.querySelector('#nombre');
+    nombreInput.addEventListener('input', () => {
+        console.log('escribiendo');
+    })
 }
